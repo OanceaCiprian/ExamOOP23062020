@@ -20,8 +20,8 @@ public class Category {
 		this.name = name;
 	}
 
-	public String[] getActivities() {
-		return activities;
+	public String getActivities() {
+		return Arrays.toString(activities);
 	}
 
 	public void setActivities(String[] activities) {

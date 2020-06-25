@@ -48,7 +48,7 @@ public class Rating {
 	
 	@Override
 	public String toString() {
-		return this.numStars + " : [" + this.comment + " ]"; 
+		return this.numStars + " : " + this.comment; 
 	}
 
 }

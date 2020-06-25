@@ -80,9 +80,9 @@ public class Sports {
     public List<String> getCategoriesForActivity(String activity) {
     	List<String> categoriesForActivity = new ArrayList<>();
     	
-    	for(String a : activitiesSet) {
-    		if(a.contains(activity)) {
-    			categoriesForActivity.add(activity);
+    	for(Category c : categories) {
+    		if(c.getActivities().contains(activity)) {
+    			categoriesForActivity.add(c.getName());
     		}
     	}
 
@@ -137,7 +137,7 @@ public class Sports {
     	List<String> productsForActivity = new ArrayList<>();
     	for(Product p : products.values()) {
     		if(p.getActivityName() == activityName) {
-    			productsForActivity.add(p.getActivityName());
+    			productsForActivity.add(p.getName());
     		}
     	}
         return productsForActivity;
@@ -201,7 +201,7 @@ public class Sports {
     	System.out.println(ratingsForProduct);
         return ratingsForProduct
         		.stream()
-        		.sorted()
+        		.sorted(Comparator.<String>comparingInt(s->Integer.parseInt(s.split(":")[0].trim())).reversed())
         		.collect(Collectors.toList());
     }
 
@@ -260,7 +260,8 @@ public class Sports {
      */
     public SortedMap<String, Double> starsPerActivity() {
     	Map<String, Double> startsPerActivity = new HashMap<>();
-        return null;
+        return products.values().stream().filter(p->ratings.stream().anyMatch(r->r.getProductName().equals(p.getName())))
+        		.collect(Collectors.toMap(Product::getActivityName,p->getStarsOfProduct(p.getName()),Double::max, TreeMap::new));
     }
 
     /**
@@ -273,7 +274,8 @@ public class Sports {
      */
     public SortedMap<Double, List<String>> getProductsPerStars () {
     	Map<Double, List<String>> productsPerStars = new HashMap<>();
-        return null;
+    	return products.values().stream().filter(p->ratings.stream().anyMatch(r->r.getProductName().equals(p.getName())))
+    			.map(p->p.getName()).collect(Collectors.groupingBy(pName -> getStarsOfProduct(pName),() -> new TreeMap<>((d1, d2) -> Double.compare(d2, d1)),Collectors.toList()));
     }
 
 }
